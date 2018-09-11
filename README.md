@@ -1,6 +1,6 @@
 # nopcommerce4-pointcheckout
-nopCommerce 4 extension for PointCheckout
-plugin installation steps:
+nopCommerce 4 extension for PointCheckout<br/>
+plugin installation steps:<br/>
 1- in admin->configuration->plugins->local plugins click on upload plugin or theme button<br/>
 2- upload the zip file you download form latest relase (payment.pointcheckoutpay.zip)<br/>
 3- you will see pointcheckot in your loacl plugin list <br/>
