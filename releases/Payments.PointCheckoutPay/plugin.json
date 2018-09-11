@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "PointCheckout",
+  "SystemName": "Payments.PointCheckoutPay",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.00" ],
+  "Author": "PointCheckout Development team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Payments.PointCheckoutPay.dll",
+  "Description": "This plugin allows paying with PointCheckout"
+}
