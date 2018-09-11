@@ -200,26 +200,88 @@ namespace Nop.Plugin.Payments.PointCheckoutPay.Controllers
             var order = _orderService.GetOrderById(int.Parse(orderId.Value));
             if (order != null)
             {
-                    if (_PointCheckoutPayPaymentProcessor.CheckPayment(checkout.Value))
+                PointCheckoutResponse response = _PointCheckoutPayPaymentProcessor.CheckPayment(checkout.Value);
+                if (response != null)
+                {
+                    if (response.success && response.result.status.Equals("PAID"))
                     {
                         order.OrderStatus = OrderStatus.Processing;
                         order.PaymentStatus = PaymentStatus.Paid;
+                        //add a note
+                        order.OrderNotes.Add(new OrderNote()
+                        {
+                            Note = getOrderHistoryCommentMessage(response.result.checkoutId, response.result.status, response.result.currency, response.result.cod),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+                    }
+                    else if (response.success)
+                    {
+                        //add a note
+                        order.OrderNotes.Add(new OrderNote()
+                        {
+                            Note = getOrderHistoryCommentMessage(response.result.checkoutId, response.result.status, response.result.currency, 0),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
                         _orderService.UpdateOrder(order);
                     }
                     else
                     {
                         order.OrderStatus = OrderStatus.Cancelled;
                         order.PaymentStatus = PaymentStatus.Voided;
-                       _orderService.UpdateOrder(order);
+                        //add a note
+                        order.OrderNotes.Add(new OrderNote()
+                        {
+                            Note = "[ERROR] payment failed with error message: " + response.error,
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
                     }
                     return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
-             }  
+                }
+                else
+                {
+                    //add a note
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = "[ERROR] payment failed error connecting to pointcheckout",
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                }
+            }
             //if no such order with the provided id redirect to home page 
             return RedirectToRoute("HomePage");
         }
-               
 
-            
+        private string getOrderHistoryCommentMessage(string checkoutId, string status, string currency, decimal cod)
+        {
+           
+            string message = "PointCheckout Status: "+status+"\n"+"PointCheckout Transaction ID: "+checkoutId+"\n";
+            if (cod > 0){
+               message+= "[NOTICE] COD Amount: "+cod+" "+currency+"\n";
+            }
+            message += "Transaction Url: " + getAdminUrl() + "/merchant/transactions/" + checkoutId + "/read";
+            return message;
+        }
+
+        private string getAdminUrl()
+        {
+            if (_PointCheckoutPayPaymentSettings.Enviroment == "1")
+            {
+                return "https://admin.test.pointcheckout.com";
+            }
+            else if (_PointCheckoutPayPaymentSettings.Enviroment == "2")
+            {
+                return "https://admin.staging.pointcheckout.com";
+            }
+            return "https://admin.pointcheckout.com";
+        }
+
 
 
         public IActionResult CancelOrder()
@@ -231,6 +293,13 @@ namespace Nop.Plugin.Payments.PointCheckoutPay.Controllers
             {
                 order.OrderStatus = OrderStatus.Cancelled;
                 order.PaymentStatus = PaymentStatus.Voided;
+                //add a note
+                order.OrderNotes.Add(new OrderNote()
+                {
+                    Note = "payment cancelled by user",
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
                 _orderService.UpdateOrder(order);
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });
             }

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Nop.Plugin.Payments.PointCheckoutPay</id>
+    <version>1.42.0</version>
+    <authors>Nop Solutions, Ltd</authors>
+    <owners>Nop Solutions, Ltd</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>http://www.nopcommerce.com/</projectUrl>
+    <description>This plugin allows paying with PointCheckout</description>
+    <copyright>Copyright © Nop Solutions, Ltd</copyright>
+    <repository type="Git" url="https://github.com/nopSolutions/nopCommerce" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1">
+        <dependency id="Nop.Web.Framework" version="4.0.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <contentFiles>
+      <files include="any/net461/logo.jpg" buildAction="Content" />
+      <files include="any/net461/plugin.json" buildAction="Content" />
+      <files include="any/net461/Views/Configure.cshtml" buildAction="Content" />
+      <files include="any/net461/Views/PaymentInfo.cshtml" buildAction="Content" />
+      <files include="any/net461/Views/_ViewImports.cshtml" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+  <files>
+    <file src="C:\inetpub\wwwroot\project\Presentation\Nop.Web\Plugins\Payments.PointCheckoutPay\Nop.Plugin.Payments.PointCheckoutPay.dll" target="lib\net461\Nop.Plugin.Payments.PointCheckoutPay.dll" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\logo.jpg" target="content\logo.jpg" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\logo.jpg" target="contentFiles\any\net461\logo.jpg" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\plugin.json" target="content\plugin.json" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\plugin.json" target="contentFiles\any\net461\plugin.json" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\Configure.cshtml" target="content\Views\Configure.cshtml" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\Configure.cshtml" target="contentFiles\any\net461\Views\Configure.cshtml" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\PaymentInfo.cshtml" target="content\Views\PaymentInfo.cshtml" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\PaymentInfo.cshtml" target="contentFiles\any\net461\Views\PaymentInfo.cshtml" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\_ViewImports.cshtml" target="content\Views\_ViewImports.cshtml" />
+    <file src="C:\inetpub\wwwroot\project\Plugins\Nop.Plugin.Payments.PointCheckoutPay\Views\_ViewImports.cshtml" target="contentFiles\any\net461\Views\_ViewImports.cshtml" />
+  </files>
+</package>
