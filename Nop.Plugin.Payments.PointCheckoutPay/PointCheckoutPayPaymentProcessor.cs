@@ -238,23 +238,28 @@ namespace Nop.Plugin.Payments.PointCheckoutPay
             {
                 pointCheckoutClient.CancelPendingRequests();
                 HttpResponseMessage response = pointCheckoutClient.SendAsync(request).Result;
-                response.EnsureSuccessStatusCode();
                 string responseString =  response.Content.ReadAsStringAsync().Result;
                 PointCheckoutResponse responseObject = JsonConvert.DeserializeObject<PointCheckoutResponse>(responseString);
-                string redirectUrl = GetPointCheckoutBaseUrl() + "/checkout/" + responseObject.result.checkoutKey;
-                var order = _orderService.GetOrderById(int.Parse(responseObject.result.referenceId));
-                //add a note
-                order.OrderNotes.Add(new OrderNote()
+                if (responseObject.success)
                 {
-                    Note = getOrderHistoryCommentMessage(responseObject.result.checkoutId, responseObject.result.status, responseObject.result.currency, 0),
-                    DisplayToCustomer = false,
-                    CreatedOnUtc = DateTime.UtcNow
-                });
-                _orderService.UpdateOrder(order);
-                _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl);
-                return;
-            } 
-            catch (Exception ex)
+                    string redirectUrl = GetPointCheckoutBaseUrl() + "/checkout/" + responseObject.result.checkoutKey;
+                    var order = _orderService.GetOrderById(int.Parse(responseObject.result.referenceId));
+                    //add a note
+                    order.OrderNotes.Add(new OrderNote()
+                    {
+                        Note = getOrderHistoryCommentMessage(responseObject.result.checkoutId, responseObject.result.status, responseObject.result.currency, 0),
+                        DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+                    _orderService.UpdateOrder(order);
+                    _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl);
+                    return;
+                }
+                else
+                { 
+                   throw new NopException("ERROR: "+responseObject.error);
+                }
+            }catch (Exception ex)
             {
                 ex.GetBaseException();
                 _httpContextAccessor.HttpContext.Response.Redirect(_webHelper.GetStoreLocation());
